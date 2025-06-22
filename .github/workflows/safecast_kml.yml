@@ -1,0 +1,31 @@
+name: Generate Safecast KML
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # اجرای خودکار هر روز ساعت ۶ صبح UTC
+  workflow_dispatch:      # قابلیت اجرای دستی از GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.10
+
+    - name: Install requests
+      run: pip install requests
+
+    - name: Run script
+      run: python safecast_combined.py
+
+    - name: Upload result
+      uses: actions/upload-artifact@v4
+      with:
+        name: live-kml
+        path: live_combined.kml
